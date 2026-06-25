@@ -89,9 +89,6 @@ const Games = () => {
         <h1 className="text-4xl font-bold text-yellow-400">
           🎰 Slot Game
         </h1>
-        <p className="text-sm text-zinc-400">
-          Pixi.js + React + TypeScript
-        </p>
       </div>
 
       {/* Game Container */}
