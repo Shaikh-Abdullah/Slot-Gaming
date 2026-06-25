@@ -10,6 +10,7 @@ const Games = () => {
   const [isSpinning, setIsSpinning] = useState(false);
   const [autoPlay, setAutoPlay] = useState(false);
   const [grid, setGrid] = useState<string[][]>(() => randomGrid());
+  const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
 
   const autoRef = useRef<number | null>(null);
   // const TEST_WIN = true;
@@ -42,8 +43,10 @@ const Games = () => {
         const result = checkWin(nextGrid);
 
         if (result.win) {
+          setToast({ message: `🎉 WIN! Row ${result.row + 1} matched: ${result.symbol}`, type: "success" });
           console.log("🎉 WIN!", result);
         } else {
+          setToast(null);
           console.log("😢 LOST");
         }
       }, 800);
@@ -76,6 +79,7 @@ const Games = () => {
     setAutoPlay((prev) => !prev);
   };
 
+  const dismissToast = () => setToast(null);
 
   return (
     <div className="min-h-screen bg-zinc-950 text-white">
@@ -120,6 +124,26 @@ const Games = () => {
           </Button>
 
         </div>
+
+        {toast ? (
+          <div
+            className={`fixed left-1/2 top-8 z-50 -translate-x-1/2 rounded-2xl px-6 py-3 text-sm font-semibold shadow-2xl transition duration-300 ${
+              toast.type === "success"
+                ? "bg-emerald-500 text-black"
+                : "bg-red-500 text-white"
+            }`}
+          >
+            <div className="flex items-center gap-3">
+              <span>{toast.message}</span>
+              <button
+                onClick={dismissToast}
+                className="rounded-full bg-black/20 px-2 py-1 text-xs"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        ) : null}
 
       </div>
     </div>
