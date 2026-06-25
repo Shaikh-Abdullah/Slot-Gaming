@@ -9,8 +9,10 @@ const Games = () => {
   const [bet, setBet] = useState(10);
   const [isSpinning, setIsSpinning] = useState(false);
   const [autoPlay, setAutoPlay] = useState(false);
+  const [grid, setGrid] = useState<string[][]>(() => randomGrid());
 
   const autoRef = useRef<number | null>(null);
+  // const TEST_WIN = true;
 
   const increaseBet = () => setBet((b) => b + 10);
 
@@ -25,8 +27,19 @@ const Games = () => {
       setTimeout(() => {
         setIsSpinning(false);
 
-        const grid = randomGrid();
-        const result = checkWin(grid);
+        const nextGrid = randomGrid();
+
+        // To test a winning scenario, uncomment the TEST_WIN code below and comment out randomGrid():
+        // const nextGrid = [
+        //   ["🍒", "🍒", "🍒", "🍒", "🍒"],
+        //   ["🍋", "🔔", "💎", "7️⃣", "⭐"],
+        //   ["🍋", "🔔", "💎", "7️⃣", "⭐"],
+        //   ["🍋", "🔔", "💎", "7️⃣", "⭐"],
+        //   ["🍋", "🔔", "💎", "7️⃣", "⭐"],
+        // ];
+
+        setGrid(nextGrid);
+        const result = checkWin(nextGrid);
 
         if (result.win) {
           console.log("🎉 WIN!", result);
@@ -89,7 +102,7 @@ const Games = () => {
 
         {/* PIXI SLOT */}
         <div className="rounded-2xl border border-yellow-500/20 bg-zinc-900 p-6 shadow-lg">
-          <PixiSlot isSpinning={isSpinning} />
+          <PixiSlot isSpinning={isSpinning} grid={grid} />
         </div>
 
         {/* Controls */}

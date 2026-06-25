@@ -3,9 +3,10 @@ import { Application, Container, Graphics, Text } from "pixi.js";
 
 interface PixiSlotProps {
   isSpinning: boolean;
+  grid?: string[][];
 }
 
-const PixiSlot = ({ isSpinning }: PixiSlotProps) => {
+const PixiSlot = ({ isSpinning, grid }: PixiSlotProps) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const appRef = useRef<Application | null>(null);
 
@@ -29,7 +30,7 @@ const PixiSlot = ({ isSpinning }: PixiSlotProps) => {
         containerRef.current.appendChild(app.canvas);
       }
 
-      drawGrid(app);
+      drawGrid(app, grid);
     };
 
     init();
@@ -68,7 +69,10 @@ const PixiSlot = ({ isSpinning }: PixiSlotProps) => {
       intervalRef.current = null;
     }
 
-    redrawRandom();
+    const app = appRef.current;
+    if (!app) return;
+
+    drawGrid(app, grid);
   };
 
   const redrawRandom = () => {
@@ -81,6 +85,9 @@ const PixiSlot = ({ isSpinning }: PixiSlotProps) => {
     const size = 90;
 
     const symbols = ["🍒", "🍋", "🔔", "💎", "7️⃣", "⭐"];
+    const outputGrid = grid && !isSpinning ? grid : Array.from({ length: 5 }, () =>
+      Array.from({ length: 5 }, () => symbols[Math.floor(Math.random() * symbols.length)])
+    );
 
     for (let row = 0; row < 5; row++) {
       for (let col = 0; col < 5; col++) {
@@ -90,7 +97,7 @@ const PixiSlot = ({ isSpinning }: PixiSlotProps) => {
         cell.fill(0x2a2a2a);
 
         const text = new Text({
-          text: symbols[Math.floor(Math.random() * symbols.length)],
+          text: outputGrid[row][col],
           style: {
             fontSize: 22,
             fill: 0xffffff,
@@ -115,10 +122,14 @@ const PixiSlot = ({ isSpinning }: PixiSlotProps) => {
     } else {
       stopSpin();
     }
-  }, [isSpinning]);
+  }, [isSpinning, grid]);
 
-  const drawGrid = (app: Application) => {
+  const drawGrid = (app: Application, providedGrid?: string[][]) => {
     const container = new Container();
+
+    const outputGrid = providedGrid ?? Array.from({ length: 5 }, () =>
+      Array.from({ length: 5 }, () => "🍒")
+    );
 
     const size = 90;
 
@@ -130,7 +141,7 @@ const PixiSlot = ({ isSpinning }: PixiSlotProps) => {
         cell.fill(0x2a2a2a);
 
         const text = new Text({
-          text: "🍒",
+          text: outputGrid[row][col],
           style: {
             fontSize: 22,
             fill: 0xffffff,
