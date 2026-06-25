@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import BetControl from "../components/betControl/BetControl";
 import Button from "../components/button/Button";
 import PixiSlot from "../components/slotMachine/PixiSlot";
+import { randomGrid } from "../utils/randomGrid";
+import { checkWin } from "../utils/checkWin";
 
 const Games = () => {
   const [bet, setBet] = useState(10);
@@ -16,16 +18,27 @@ const Games = () => {
     setBet((b) => (b > 10 ? b - 10 : 10));
   };
 
-  // 🎰 SPIN LOGIC
   const handleSpin = () => {
-    if (isSpinning) return;
+  if (isSpinning) return;
 
-    setIsSpinning(true);
+  setIsSpinning(true);
 
-    setTimeout(() => {
-      setIsSpinning(false);
-    }, 800);
-  };
+  setTimeout(() => {
+    setIsSpinning(false);
+
+    // 🎰 GENERATE FINAL RESULT HERE
+    const grid = randomGrid();
+
+    const result = checkWin(grid);
+
+    if (result.win) {
+      console.log("🎉 WIN!", result);
+    } else {
+      console.log("😢 LOST");
+    }
+
+  }, 800);
+};
 
   // 🔁 AUTO PLAY ENGINE
   useEffect(() => {
@@ -51,6 +64,7 @@ const Games = () => {
   const toggleAutoPlay = () => {
     setAutoPlay((prev) => !prev);
   };
+
 
   return (
     <div className="min-h-screen bg-zinc-950 text-white">

@@ -1,19 +1,19 @@
-import type { Grid, SymbolType } from "../types/slot";
+export const randomGrid = () => {
+  const symbols = ["🍒", "🍋", "🔔", "💎", "7️⃣", "⭐"];
 
-const symbols: SymbolType[] = [
-  "cherry",
-  "lemon",
-  "bell",
-  "diamond",
-  "seven",
-  "star",
-];
+  const grid: string[][] = [];
 
-export const generateRandomGrid = (): Grid => {
-  return Array.from({ length: 5 }, () =>
-    Array.from(
-      { length: 5 },
-      () => symbols[Math.floor(Math.random() * symbols.length)]
-    )
-  );
+  for (let row = 0; row < 5; row++) {
+    const currentRow: string[] = [];
+
+    for (let col = 0; col < 5; col++) {
+      currentRow.push(
+        symbols[Math.floor(Math.random() * symbols.length)]
+      );
+    }
+
+    grid.push(currentRow);
+  }
+
+  return grid;
 };
