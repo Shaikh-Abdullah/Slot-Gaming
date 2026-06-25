@@ -1,12 +1,7 @@
-import './App.css'
+import AppRouter from "./router/AppRouter";
 
-function App() {
+const App = () => {
+  return <AppRouter />;
+};
 
-  return (
-    <div>
-      <h1 className='text-red-800'>hello</h1>
-    </div>
-  )
-}
-
-export default App
+export default App;
