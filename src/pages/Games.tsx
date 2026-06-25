@@ -46,7 +46,7 @@ const Games = () => {
           setToast({ message: `🎉 WIN! Row ${result.row + 1} matched: ${result.symbol}`, type: "success" });
           console.log("🎉 WIN!", result);
         } else {
-          setToast(null);
+          setToast({ message: "😢 LOST — try again.", type: "error" });
           console.log("😢 LOST");
         }
       }, 800);
@@ -80,6 +80,18 @@ const Games = () => {
   };
 
   const dismissToast = () => setToast(null);
+
+  useEffect(() => {
+    if (!toast) return;
+
+    const timeout = window.setTimeout(() => {
+      setToast(null);
+    }, 2200);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [toast]);
 
   return (
     <div className="min-h-screen bg-zinc-950 text-white">
@@ -124,7 +136,7 @@ const Games = () => {
 
         {toast ? (
           <div
-            className={`fixed left-1/2 top-8 z-50 -translate-x-1/2 rounded-2xl px-6 py-3 text-sm font-semibold shadow-2xl transition duration-300 ${
+            className={`fixed right-4 top-4 z-50 rounded-2xl px-6 py-3 text-sm font-semibold shadow-2xl transition duration-300 ${
               toast.type === "success"
                 ? "bg-emerald-500 text-black"
                 : "bg-red-500 text-white"
