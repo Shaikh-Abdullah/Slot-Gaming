@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import BetControl from "../components/betControl/BetControl";
 import Button from "../components/button/Button";
 import PixiSlot from "../components/slotMachine/PixiSlot";
@@ -18,29 +18,27 @@ const Games = () => {
     setBet((b) => (b > 10 ? b - 10 : 10));
   };
 
-  const handleSpin = () => {
-  if (isSpinning) return;
+  const handleSpin = useCallback(() => {
+    setIsSpinning((prev) => {
+      if (prev) return prev;
 
-  setIsSpinning(true);
+      setTimeout(() => {
+        setIsSpinning(false);
 
-  setTimeout(() => {
-    setIsSpinning(false);
+        const grid = randomGrid();
+        const result = checkWin(grid);
 
-    // 🎰 GENERATE FINAL RESULT HERE
-    const grid = randomGrid();
+        if (result.win) {
+          console.log("🎉 WIN!", result);
+        } else {
+          console.log("😢 LOST");
+        }
+      }, 800);
 
-    const result = checkWin(grid);
+      return true;
+    });
+  }, []);
 
-    if (result.win) {
-      console.log("🎉 WIN!", result);
-    } else {
-      console.log("😢 LOST");
-    }
-
-  }, 800);
-};
-
-  // 🔁 AUTO PLAY ENGINE
   useEffect(() => {
     if (autoPlay) {
       autoRef.current = window.setInterval(() => {
@@ -59,7 +57,7 @@ const Games = () => {
         autoRef.current = null;
       }
     };
-  }, [autoPlay]);
+  }, [autoPlay, handleSpin]);
 
   const toggleAutoPlay = () => {
     setAutoPlay((prev) => !prev);

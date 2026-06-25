@@ -1,4 +1,4 @@
-import { SymbolType } from "../../types/slot";
+import type { SymbolType } from "../../types/slot";
 
 export const getRandomSymbol = (): SymbolType => {
   const symbols: SymbolType[] = [
